@@ -3,6 +3,7 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+import axios from 'axios';
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -16,6 +17,13 @@
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
+axios.get('https://api.github.com/users/billymyers223')
+.then(res=>{
+  console.log(res);
+  const cards = document.querySelector('.cards');
+  const dispCard = createCard(res.data);
+  cards.appendChild(dispCard); 
+})
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -28,7 +36,7 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +57,61 @@ const followersArray = [];
       </div>
     </div>
 */
+function createCard(cardBuilder){
+  const card = document.createElement('div');
+  const img = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const Cardname = document.createElement('h3');
+  const user = document.createElement('p');
+  const pLoc = document.createElement('p');
+  const pLink = document.createElement('p');
+  const link = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+
+
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(Cardname);
+  cardInfo.appendChild(user);
+  cardInfo.appendChild(pLoc);
+  cardInfo.appendChild(pLink);
+  cardInfo.appendChild(link);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+  
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  Cardname.classList.add('name');
+  user.classList.add('username');
+
+  img.src = cardBuilder.avatar_url;
+  Cardname.textContent = cardBuilder.name;
+  user.textContent = cardBuilder.login;
+  pLoc.textContent = `location: ${cardBuilder.location}`
+  pLink.textContent = `Profile: `;
+  link.textContent = cardBuilder.url;
+  link.href = cardBuilder.url;
+  followers.textContent = `Followers: ${cardBuilder.followers}`;
+  following.textContent = `Following: ${cardBuilder.following}`;
+
+
+  return card;
+}
+
+const followersArray = ['surety','tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+
+followersArray.forEach(item =>{
+  axios.get(`https://api.github.com/users/${item}`)
+  .then(res =>{
+    console.log(res);
+    const cards = document.querySelector('.cards');
+    const dispCard = createCard(res.data);
+    cards.appendChild(dispCard);
+  })
+})
 
 /*
   List of LS Instructors Github username's:
